@@ -1,48 +1,249 @@
-Customer Shopping Behavior Analysis
+# Customer Shopping Behavior Analysis
 
-An end-to-end analysis of a 3,900-row retail dataset, from raw data to business insight. The project covers data cleaning and feature engineering in Python, analytical querying in SQL, and dashboard visualization in Power BI.
+An end-to-end retail analytics project analyzing **3,900 customer transactions** to uncover purchasing patterns, customer segments, subscription behavior, and the relationship between discounts and revenue.
 
-Project Overview
+The project demonstrates a complete analytics workflow — from **data cleaning and feature engineering in Python**, through **SQL-based business analysis in PostgreSQL**, to **interactive dashboard development in Power BI**.
 
-This project explores customer shopping behavior to understand purchasing patterns, segment customers by loyalty, and evaluate the impact of discounts and subscriptions on revenue. The goal was to move from a raw transactional dataset to insights that could support merchandising and pricing decisions.
+## 📌 Project Overview
 
-Data Preparation (Python / Pandas)
-Cleaned a 3,900-row dataset with 18 original columns
-Handled missing review ratings (37 nulls) using category-level median imputation, rather than dropping rows or using a single global median, to preserve category-specific rating patterns
-Identified and removed a redundant column (promo_code_used duplicated discount_applied) after validating the two columns were identical
-Engineered an age_group feature (Young Adult, Adult, Middle Age, Senior) using quartile-based binning
-Engineered a purchase_frequency_days feature, mapping categorical purchase frequency (e.g. "Weekly," "Fortnightly," "Annually") to numeric day counts to support cohort and forecasting analysis
-Loaded the cleaned dataset into PostgreSQL via SQLAlchemy for the analysis stage
-Analysis (SQL / PostgreSQL)
+Understanding customer purchasing behavior can help retailers improve pricing, customer retention, merchandising, and loyalty strategies.
 
-Wrote analytical SQL queries to answer specific business questions, and here's what the data showed:
+This project analyzes customer shopping data to answer questions such as:
 
-Revenue by gender: Male customers generated $157,890 in total revenue versus $75,191 for female customers — driven largely by a higher share of male customers in the dataset (2,652 of 3,900) rather than higher per-customer spend
-Discount users who still spend above average: 839 customers applied a discount and still spent above the $59.76 average purchase amount, suggesting discounting doesn't always signal price-sensitivity
-Top-rated products: Gloves (3.86), Sandals (3.84), Boots (3.82), Hat (3.80), and Skirt (3.78) had the highest average review ratings
-Shipping type: Express shipping customers spent slightly more on average ($60.48) than Standard shipping customers ($58.46)
-Subscribers vs. non-subscribers: Subscribed customers did not spend more on average ($59.49 vs. $59.87 for non-subscribers) — subscription status has little bearing on order value in this dataset
-Most discount-dependent products: Hats (50% of purchases discounted), Sneakers (49.7%), Coats (49.1%), Sweaters (48.2%), and Pants (47.4%)
-Customer segmentation: Using previous-purchase-count thresholds (New = 1, Returning = 2–10, Loyal = 10+), 3,116 customers classified as Loyal, 701 as Returning, and only 83 as New — the heavy skew toward "Loyal" suggests the segmentation thresholds could be recalibrated for a more evenly distributed view in a follow-up iteration
-Top 3 products per category: e.g. Jewelry, Sunglasses, and Belt led Accessories; Blouse, Pants, and Shirt led Clothing; Sandals, Shoes, and Sneakers led Footwear
-Repeat buyers and subscriptions: Customers with 5+ previous purchases subscribed at roughly the same rate (27.6%) as the overall customer base (27%) — repeat buying doesn't predict subscription likelihood here
-Revenue by age group: Fairly even across segments, with Young Adults contributing the most ($62,143) and Seniors the least ($55,763)
-Visualization (Power BI)
+* How does customer spending vary across different customer segments?
+* Do subscribers spend more than non-subscribers?
+* Which product categories generate the most sales?
+* How does discount usage relate to purchasing behavior?
+* Which customer groups and products present opportunities for stronger retention and marketing?
+* Does frequent purchasing translate into subscription adoption?
 
-Findings from the SQL analysis were brought into an interactive Power BI dashboard with KPI cards (customer count, average purchase amount, average review rating), a subscription-status breakdown, and revenue/sales views by category and age group — filterable by subscription status, gender, category, and shipping type.
+The analysis transforms raw transactional data into business-focused insights that can support **customer segmentation, pricing, merchandising, and loyalty decisions**.
 
-Business Recommendations
-Promote subscription benefits more strongly, since subscribers currently spend no more than non-subscribers — there's room to make the subscription tier more compelling
-Build loyalty incentives that reward repeat purchases specifically, since high purchase frequency alone isn't converting into subscriptions
-Revisit discount policy for high-discount-dependency items (Hats, Sneakers, Coats) to protect margin
-Feature top-rated products (Gloves, Sandals, Boots) more prominently in marketing
+## 🗂️ Dataset
 
-Tools & Technologies
-Python (Pandas)
-SQL (PostgreSQL)
-Power BI
+The dataset contains **3,900 customer transaction records** and **18 original columns**, covering customer demographics, purchasing behavior, product information, discounts, subscriptions, shipping preferences, and review ratings.
 
-Skills: Python (Pandas) • SQL (PostgreSQL) • Power BI • Data Cleaning • Feature Engineering • Data Visualization
-Jupyter Notebook
+Key fields include:
 
-This is a portfolio project created for learning and demonstration purposes, based on a publicly available sample retail dataset. It showcases data cleaning, feature engineering, SQL analysis, and dashboard design skills.
+* Customer demographics
+* Product category
+* Purchase amount
+* Review rating
+* Discount usage
+* Subscription status
+* Purchase frequency
+* Shipping type
+* Previous purchases
+
+> **Note:** This is a portfolio project created for learning and demonstration purposes using a publicly available sample retail dataset.
+
+
+# 1. Data Preparation — Python / Pandas
+
+The raw dataset was cleaned and prepared using **Python and Pandas**.
+
+### Data Cleaning
+
+Key cleaning activities included:
+
+* Cleaned a **3,900-row dataset containing 18 original columns**
+* Investigated missing values and data quality issues
+* Identified **37 missing review ratings**
+* Imputed missing ratings using the **median review rating within each product category**
+* Removed a redundant `promo_code_used` column after validating that it duplicated `discount_applied`
+* Checked the dataset for consistency before loading it into the database
+
+### Why category-level median imputation?
+
+Instead of replacing all missing ratings with one global median, the analysis used the median rating within each product category.
+
+This approach preserves potential differences in customer rating behavior between categories while avoiding unnecessary loss of records.
+
+---
+
+## ⚙️ Feature Engineering
+
+Additional analytical features were created to make the dataset more useful for segmentation and analysis.
+
+### `age_group`
+
+Customers were grouped into four age segments:
+
+* Young Adult
+* Adult
+* Middle Age
+* Senior
+
+The segmentation was created using **quartile-based binning** to support demographic comparisons.
+
+### `purchase_frequency_days`
+
+The categorical purchase frequency variable was converted into an approximate numerical representation of purchase intervals.
+
+For example:
+
+This enabled purchase frequency to be analyzed as a numerical variable for comparisons and further analytical work.
+
+# 2. SQL Analysis — PostgreSQL
+
+The cleaned dataset was loaded into **PostgreSQL using SQLAlchemy**.
+
+SQL was then used to answer business questions and identify patterns in customer behavior.
+
+The analysis focused on areas including:
+
+### Customer Behavior
+
+* Customer purchasing patterns
+* Average purchase amount
+* Purchase frequency
+* Previous purchase behavior
+* Customer segmentation
+
+### Subscription Analysis
+
+* Subscriber vs. non-subscriber behavior
+* Spending differences between subscription groups
+* Relationship between purchase frequency and subscription adoption
+
+### Product & Category Analysis
+
+* Revenue and sales performance by category
+* Product/category rating patterns
+* High-performing and high-discount categories
+
+### Discount Analysis
+
+* Discount usage across products
+* Categories with greater dependence on discounts
+* Potential implications for pricing and profitability
+
+---
+
+# 3. Power BI Dashboard
+
+The results from the SQL analysis were transformed into an interactive **Power BI dashboard**.
+
+### Dashboard KPIs
+
+The dashboard provides high-level metrics including:
+
+* **Customer Count**
+* **Average Purchase Amount**
+* **Average Review Rating**
+
+### Dashboard Analysis
+
+Users can explore:
+
+* Revenue and sales by product category
+* Customer distribution by age group
+* Subscription vs. non-subscription customers
+* Purchasing behavior
+* Product/category performance
+
+### Interactive Filters
+
+The dashboard can be filtered by:
+
+* Subscription Status
+* Gender
+* Product Category
+* Shipping Type
+
+This allows users to move from high-level KPIs into more specific customer and product segments.
+
+---
+
+# Key Business Insights
+
+The analysis generated several insights with potential implications for retail strategy.
+
+### 1. Subscription adoption presents an opportunity
+
+Subscribers did **not demonstrate a clear spending advantage over non-subscribers** in the analyzed dataset.
+
+This suggests that the current subscription proposition may not be sufficiently compelling to drive higher customer value.
+
+**Opportunity:** Strengthen subscription benefits around tangible customer value such as exclusive offers, early access, loyalty rewards, or shipping benefits.
+
+---
+
+### 2. Frequent purchasing does not automatically translate into subscriptions
+
+Customers with relatively frequent purchasing behavior are not necessarily converting into subscribers.
+
+This indicates a potential gap between **customer engagement and loyalty program adoption**.
+
+**Opportunity:** Introduce targeted loyalty incentives that encourage frequent purchasers to move into subscription or membership programs.
+
+---
+
+### 3. Some categories show stronger discount dependency
+
+Categories such as **Hats, Sneakers, and Coats** showed relatively high discount usage.
+
+Heavy discounting can support sales volume but may also create pressure on margins or condition customers to wait for promotions.
+
+**Opportunity:** Review discount strategies for these categories and evaluate whether targeted promotions can replace broad discounting.
+
+---
+
+### 4. Highly rated products provide marketing opportunities
+
+Products/categories including **Gloves, Sandals, and Boots** recorded strong customer ratings.
+
+High customer satisfaction can provide an opportunity for stronger merchandising and marketing visibility.
+
+**Opportunity:** Feature highly rated products more prominently in campaigns, recommendations, and promotional placements.
+
+---
+
+# Business Recommendations
+
+Based on the analysis, the following actions could be considered:
+
+| Insight                                             | Recommendation                                                     |
+| --------------------------------------------------- | ------------------------------------------------------------------ |
+| Subscribers do not clearly outspend non-subscribers | Strengthen subscription benefits and value proposition             |
+| Frequent purchasers are not necessarily subscribers | Target frequent buyers with loyalty/subscription incentives        |
+| Some categories rely heavily on discounts           | Review discount depth and frequency to protect margins             |
+| Highly rated products have marketing potential      | Increase visibility of highly rated products                       |
+| Customer behavior varies across segments            | Use demographic and behavioral segmentation for targeted campaigns |
+
+---
+
+# Tools
+
+### Programming & Analysis
+
+* **Python**
+* **Pandas**
+* **Jupyter Notebook**
+
+### Database & SQL
+
+* **PostgreSQL**
+* **SQLAlchemy**
+
+### Visualization
+
+* **Microsoft Power BI**
+
+# Project Objective
+
+The objective of this project was not simply to visualize the dataset, but to demonstrate an **end-to-end analytics workflow**:
+
+> **Raw data → Clean data → Engineered features → SQL analysis → Business insights → Interactive dashboard**
+
+The project demonstrates the ability to combine **Python, SQL, and Power BI** to transform transactional data into insights that can support business decision-making.
+
+---
+
+## About the Project
+
+This project was developed as part of my continued development in **data analytics**, with a focus on building practical skills across data preparation, SQL analysis, visualization, and business interpretation.
+
+It is intended as a portfolio project to demonstrate practical application of:
+
+**Python • SQL • Power BI • Data Cleaning • Feature Engineering • Business Analytics**
